@@ -3,7 +3,8 @@
 
 
 Player::Player() : 
-	m_position{0,0,0}
+	m_position{0,0,0},
+	m_layer(Layers::BackLayer)
 	
 {
 	m_playerTexture.loadFromFile("goat.png");
@@ -21,9 +22,12 @@ void Player::update(sf::Time dt, Xbox360Controller *t_cont)
 	checkInput(t_cont);
 }
 
-void Player::render(sf::RenderWindow & t_win)
+void Player::render(sf::RenderWindow & t_win, Layers t_currentLayer)
 {
-	t_win.draw(m_playerSprite);
+	if (m_layer == t_currentLayer)
+	{
+		t_win.draw(m_playerSprite);
+	}
 }
 
 void Player::move(MyVector3 t_movement)
@@ -33,6 +37,16 @@ void Player::move(MyVector3 t_movement)
 
 void Player::jump()
 {
+}
+
+sf::Sprite * Player::getBody()
+{
+	return &m_playerSprite;
+}
+
+Layers Player::getCurrentLayer()
+{
+	return m_layer;
 }
 
 void Player::checkInput(Xbox360Controller *t_cont) 
@@ -55,11 +69,25 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	}
 	if (t_cont->m_currentState.A == true)
 	{
-		// Jump ?
+		if (m_layer == Layers::FrontLayer)
+		{
+			m_layer = Layers::MiddleLayer;
+		}
+		else if (m_layer == Layers::MiddleLayer)
+		{
+			m_layer = Layers::BackLayer;
+		}
 	}
 	if (t_cont->m_currentState.B == true)
 	{
-		// Interact
+		if (m_layer == Layers::MiddleLayer)
+		{
+			m_layer = Layers::FrontLayer;
+		}
+		else if (m_layer == Layers::BackLayer)
+		{
+			m_layer = Layers::MiddleLayer;
+		}
 	}
 }
 

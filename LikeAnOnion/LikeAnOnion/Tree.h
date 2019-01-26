@@ -11,7 +11,7 @@ public:
 	
 	void initilaize(MyVector3 t_position, Layers t_layer);
 	void render(sf::RenderWindow &t_window);
-	
+	sf::Sprite* getBody();
 	Layers getLayer();
 private:
 

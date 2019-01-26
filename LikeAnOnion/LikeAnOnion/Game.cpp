@@ -76,7 +76,7 @@ void Game::update(sf::Time t_deltaTime)
 {
 	m_gameControllerPad.update();
 
-	switch(m_gameMode)					// Swtich to control the screens
+	switch(m_gameMode)					// Switch to control the screens
 	{
 	case GameMode::Licence:
 		m_player.update(t_deltaTime, &m_gameControllerPad);
@@ -91,6 +91,9 @@ void Game::update(sf::Time t_deltaTime)
 	default:
 		break;
 	}
+	m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
+	
+
 }
 
 // Renders
@@ -100,8 +103,6 @@ void Game::render()
 	switch (m_gameMode)					// Swtich to control the screens
 	{
 	case GameMode::Licence:
-		m_player.render(m_renderWin);
-		//m_renderWin.setView(m_gameCamera);
 		break;
 	case GameMode::Splash:
 		break;
@@ -112,10 +113,12 @@ void Game::render()
 	default:
 		break;
 	}
-
+	
+	//m_renderWin.setView(m_gameCamera);
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));
+		m_player.render(m_renderWin, static_cast<Layers>(i));  // Player after items becuase it needs to be on top it's current layer 
 	}
 
 	m_renderWin.display();
