@@ -2,6 +2,7 @@
 #include "MyVector3.h"
 #include "Layer.h"
 #include "Tree.h"
+#include "Rock.h"
 #include <time.h>
 #include "collision.h"
 #include "SFML/Graphics.hpp"
@@ -18,10 +19,9 @@ public:
 	void render(sf::RenderWindow &t_window, Layers t_currentLayer);
 
 private:
-	
-	void initialize();
 
 	std::vector<Tree> m_trees;
+	std::vector<Rock> m_rocks;
 
 	sf::Texture m_sceneryObjects;
 

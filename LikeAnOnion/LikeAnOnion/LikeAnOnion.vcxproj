@@ -131,6 +131,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MyVector3.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Scenery.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="Tree.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MyVector3.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Rock.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="tinyc2.h" />
     <ClInclude Include="Scenery.h" />

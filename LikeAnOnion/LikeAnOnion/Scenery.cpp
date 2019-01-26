@@ -4,16 +4,16 @@ Scenery::Scenery(int t_numOfTrees)
 {
 	std::srand(static_cast<unsigned int>(time(NULL)));
 
-	if (!m_sceneryObjects.loadFromFile("ASSETS/SpriteSheet.png"))
+	if (!m_sceneryObjects.loadFromFile("ASSETS/TreesSprites.png"))
 	{
 		std::cout << "Oh no" << std::endl;
 	}
 
 	std::ifstream file;
 	file.open("Forest.txt");
+
 	std::string object;
-	int coord1;
-	int coord2;
+	sf::Vector2f coord;
 	int layer;
 
 	while(file >> object)
@@ -21,13 +21,19 @@ Scenery::Scenery(int t_numOfTrees)
 		if (object == "Tree")
 		{
 			Tree tree(m_sceneryObjects);
-			file >> coord1 >> coord2 >> layer;
-			tree.initilaize(sf::Vector2f(coord1, coord2), static_cast<Layers>(layer));
+			file >> coord.x >> coord.y >> layer;
+			tree.initilaize(coord, static_cast<Layers>(layer));
 			m_trees.push_back(tree);
+		}
+		else if (object == "Rock")
+		{
+			Rock rock(m_sceneryObjects);
+			file >> coord.x >> coord.y >> layer;
+			rock.initilaize(coord, static_cast<Layers>(layer));
+			m_rocks.push_back(rock);
 		}
 	}
 
-	initialize();
 }
 
 Scenery::~Scenery()
@@ -62,8 +68,4 @@ void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
 			tree.render(t_window);
 		}
 	}
-}
-
-void Scenery::initialize()
-{
 }

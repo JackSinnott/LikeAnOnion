@@ -12,7 +12,7 @@ Game::Game() :
 	
 {
 	// Textures
-	m_floorTexture.loadFromFile("floor.jpg");
+	m_floorTexture.loadFromFile("floor.png");
 	m_floor.setTexture(m_floorTexture);
 	m_floor.setOrigin(m_floor.getGlobalBounds().width/ 2, m_floor.getGlobalBounds().height / 2);
 

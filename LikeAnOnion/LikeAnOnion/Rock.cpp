@@ -1,36 +1,35 @@
-#include "Tree.h"
+#include "Rock.h"
 
-Tree::Tree(sf::Texture & t_sceneryTexture)
+Rock::Rock(sf::Texture & t_sceneryTexture)
 {
 	m_sprite.setTexture(t_sceneryTexture);
-	m_sprite.setTextureRect(sf::IntRect(0, 0, 174, 194));
+	m_sprite.setTextureRect(sf::IntRect(161, 297, 50, 44));
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2, m_sprite.getGlobalBounds().height / 2);
 }
 
-Tree::~Tree()
+Rock::~Rock()
 {
 }
 
-void Tree::initilaize(MyVector3 t_position, Layers t_layer)
+void Rock::initilaize(MyVector3 t_position, Layers t_layer)
 {
 	m_position = t_position;
 	m_layer = t_layer;
 
 	m_sprite.setPosition(m_position);
-	
 }
 
-void Tree::render(sf::RenderWindow & t_window)
+void Rock::render(sf::RenderWindow & t_window)
 {
 	t_window.draw(m_sprite);
 }
 
-sf::Sprite * Tree::getBody()
+sf::Sprite * Rock::getBody()
 {
 	return &m_sprite;
 }
 
-Layers Tree::getLayer()
+Layers Rock::getLayer()
 {
 	return m_layer;
 }
