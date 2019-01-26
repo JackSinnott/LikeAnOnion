@@ -3,6 +3,7 @@
 Tree::Tree(sf::Texture & t_sceneryTexture)
 {
 	m_sprite.setTexture(t_sceneryTexture);
+	m_sprite.setTextureRect(sf::IntRect(628, 1, 166, 216));
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2, m_sprite.getGlobalBounds().height / 2);
 }
 

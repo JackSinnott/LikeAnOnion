@@ -5,6 +5,8 @@
 #include <time.h>
 #include "collision.h"
 #include "SFML/Graphics.hpp"
+#include <fstream>
+#include <string>
 
 class Scenery
 {
