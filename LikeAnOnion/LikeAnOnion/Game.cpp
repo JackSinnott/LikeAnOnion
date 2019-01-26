@@ -1,8 +1,14 @@
 #include "Game.h"
 
+
+GameMode Game::m_gameMode{ GameMode::Licence };
+
+
+
+
 // Contructor
 Game::Game() :
-	m_renderWin{ sf::VideoMode{ 768, 768, 1 }, "Fracture" }
+	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Fracture" }
 {
 
 }
@@ -69,13 +75,38 @@ void Game::update(sf::Time t_deltaTime)
 {
 	m_gameControllerPad.update();
 
+	switch(m_gameMode)					// Swtich to control the screens
+	{
+	case GameMode::Licence:
+		break;
+	case GameMode::Splash:
+		break;
+	case GameMode::Menu:
+		break;
+	case GameMode::Gameplay:
+		break;
+	default:
+		break;
+	}
 }
 
 // Renders
 void Game::render()
 {
 	m_renderWin.clear();
-
+	switch (m_gameMode)					// Swtich to control the screens
+	{
+	case GameMode::Licence:
+		break;
+	case GameMode::Splash:
+		break;
+	case GameMode::Menu:
+		break;
+	case GameMode::Gameplay:
+		break;
+	default:
+		break;
+	}
 	m_renderWin.display();
 }
 
