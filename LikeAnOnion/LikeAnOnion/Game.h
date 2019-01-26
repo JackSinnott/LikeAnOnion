@@ -7,6 +7,7 @@
 #include "Enums.h"
 #include "MyVector3.h"
 #include "Xbox360Controller.h"
+#include "Scenery.h"
 
 class Game
 {
@@ -18,6 +19,8 @@ public:
 	static GameMode m_gameMode;
 
 protected:
+
+	Scenery m_forest;
 
 	void intialize();
 	void update(sf::Time t_deltaTime);

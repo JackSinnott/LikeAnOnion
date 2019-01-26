@@ -88,7 +88,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SFML_SDK)/include</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SFML_SDK)/lib</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,17 +129,22 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MyVector3.cpp" />
+    <ClCompile Include="Scenery.cpp" />
     <ClCompile Include="Splash.cpp" />
+    <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Xbox360Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="Licence.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MyVector3.h" />
+    <ClInclude Include="Scenery.h" />
     <ClInclude Include="Splash.h" />
+    <ClInclude Include="Tree.h" />
     <ClInclude Include="Xbox360Controller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
