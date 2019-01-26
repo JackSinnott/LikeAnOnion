@@ -14,17 +14,27 @@ public:
 	void render(sf::RenderWindow & t_win, Layers t_currentLayer);
 	void move(MyVector3 t_movement);
 	void jump();
+	void updatePlayerFrame();
 	sf::Sprite* getBody();
 	Layers getCurrentLayer();
 	void checkInput(Xbox360Controller *t_cont);
 	sf::Vector2f getPosition();
 
+	int getHouseItems();
+
 private:
 	sf::Texture m_playerTexture;
 	sf::Sprite m_playerSprite;
-	sf::IntRect m_currentAnimationImage;
+	sf::IntRect m_playerFrame;
+
 	MyVector3 m_position;
 	Layers m_layer;
 
+	bool walkLeft{ false };
+	bool walkRight{ false };
+
+	int animationTimer{ 0 };
+
+	int houseItems{ 0 };
 };
 
