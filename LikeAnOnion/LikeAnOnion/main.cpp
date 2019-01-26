@@ -12,6 +12,10 @@
 #pragma comment(lib,"sfml-network.lib") 
 #endif 
 
+#ifndef TINYC2_IMPL
+#define TINYC2_IMPL
+#endif
+
 #include "Game.h"
 
 int main()

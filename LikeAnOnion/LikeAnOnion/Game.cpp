@@ -8,7 +8,7 @@ GameMode Game::m_gameMode{ GameMode::Licence };
 
 // Contructor
 Game::Game() :
-	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Fracture" }
+	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Like An Onion" }
 {
 
 }
@@ -78,6 +78,8 @@ void Game::update(sf::Time t_deltaTime)
 	switch(m_gameMode)					// Swtich to control the screens
 	{
 	case GameMode::Licence:
+		m_player.update(t_deltaTime, &m_gameControllerPad);
+		m_gameCamera.setCenter(m_player.getPosition());	
 		break;
 	case GameMode::Splash:
 		break;
@@ -97,6 +99,8 @@ void Game::render()
 	switch (m_gameMode)					// Swtich to control the screens
 	{
 	case GameMode::Licence:
+		m_player.render(m_renderWin);
+		//m_renderWin.setView(m_gameCamera);
 		break;
 	case GameMode::Splash:
 		break;

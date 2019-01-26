@@ -1,12 +1,15 @@
 #pragma once
 
 
+
 #include <iostream>
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 #include "Enums.h"
 #include "MyVector3.h"
 #include "Xbox360Controller.h"
+#include "Player.h"
+#include "collision.h"
 
 class Game
 {
@@ -26,5 +29,7 @@ protected:
 
 	sf::RenderWindow m_renderWin;
 	Xbox360Controller m_gameControllerPad;
+	Player m_player;
+	sf::View m_gameCamera;
 };
 
