@@ -4,7 +4,7 @@
 
 Player::Player() : 
 	m_position{100,-100,0},
-	m_layer(Layers::BackLayer)
+	m_layer(Layers::FrontLayer)
 	
 {
 	m_playerTexture.loadFromFile("goat.png");

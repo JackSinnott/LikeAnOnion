@@ -68,4 +68,12 @@ void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
 			tree.render(t_window);
 		}
 	}
+
+	for (Rock & rock : m_rocks)
+	{
+		if (rock.getLayer() == t_currentLayer)
+		{
+			rock.render(t_window);
+		}
+	}
 }
