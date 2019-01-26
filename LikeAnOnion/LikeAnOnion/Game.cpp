@@ -7,7 +7,7 @@ GameMode Game::m_gameMode{ GameMode::Licence };
 
 Game::Game() :
 
-	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Like An Onion" },
+	m_renderWin{ sf::VideoMode{ 1200, 800, 1 }, "Like An Onion" },
 	m_forest(5)
 	
 {
@@ -16,11 +16,18 @@ Game::Game() :
 	m_floor.setTexture(m_floorTexture);
 	m_floor.setOrigin(m_floor.getGlobalBounds().width/ 2, m_floor.getGlobalBounds().height / 2);
 
-	m_standngFloorTexture.loadFromFile("doubleSky.jpg");
-	m_standngFloor.setTexture(m_standngFloorTexture);
-	m_standngFloor.setOrigin(m_standngFloor.getGlobalBounds().width / 2, m_standngFloor.getGlobalBounds().height / 2);
-	m_standngFloor.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_standngFloor.getGlobalBounds().height / 2) + 1);
-	m_gameCamera.setSize(1600, 1600);
+	for (int i = 0; i < 10; i++)
+	{
+		m_grounds[i].setTexture(m_floorTexture);
+		m_grounds[i].setOrigin(m_floor.getGlobalBounds().width / 2, m_floor.getGlobalBounds().height / 2);
+		m_grounds[i].setPosition(0 + i * 3070, 0);
+	}
+
+	m_skyTexture.loadFromFile("dubSky.png");
+	m_sky.setTexture(m_skyTexture);
+	m_sky.setOrigin(m_sky.getGlobalBounds().width / 2, m_sky.getGlobalBounds().height / 2);
+	m_sky.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_sky.getGlobalBounds().height / 2) + 1);
+	m_gameCamera.setSize(1200, 800);
 }
 
 /// Destructor
@@ -102,11 +109,14 @@ void Game::update(sf::Time t_deltaTime)
 		break;
 	}
 	//m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
-	if (collision::isCollided(m_floor, *m_player.getBody()))
+	for (int i = 0; i < 10; i++)
 	{
-		m_player.getBody()->setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
-			m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)});
-	//	std::cout << "hit" << std::endl;
+		if (collision::isCollided(m_grounds[i], *m_player.getBody()))
+		{
+			m_player.getBody()->setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
+				m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
+			+ static_cast<int>(m_player.getCurrentLayer()) * 20 });
+		}
 	}
 
 }
@@ -128,15 +138,26 @@ void Game::render()
 	default:
 		break;
 	}
-	m_renderWin.draw(m_floor);
-	m_renderWin.draw(m_standngFloor);
+	
+	for (int i = 0; i < 6; i++)
+	{
+		m_renderWin.draw(m_sky);
+		m_sky.setPosition(m_sky.getPosition().x + m_sky.getGlobalBounds().width, m_sky.getPosition().y);
+	}
+	m_sky.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_sky.getGlobalBounds().height / 2) + 1);
+
+	for (int i = 0; i < 10; i++)
+	{
+		m_renderWin.draw(m_grounds[i]);
+	}
+	
 	m_renderWin.setView(m_gameCamera);
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));
 		m_player.render(m_renderWin, static_cast<Layers>(i));  // Player after items becuase it needs to be on top it's current layer 
 	}
-
+	
 	m_renderWin.display();
 }
 

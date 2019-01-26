@@ -40,8 +40,9 @@ protected:
 
 	sf::Texture m_floorTexture;
 	sf::Sprite m_floor;
-	sf::Texture m_standngFloorTexture;
-	sf::Sprite m_standngFloor;
+	sf::Sprite m_grounds[10];
+	sf::Texture m_skyTexture;
+	sf::Sprite m_sky;
 
 };
 

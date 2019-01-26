@@ -60,15 +60,15 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	{
 		this->move(sf::Vector2f{ -10, 0 });
 	}
-	if (t_cont->m_currentState.DpadUp == true || t_cont->m_currentState.LeftThumbStick.y < -50)
+	/*if (t_cont->m_currentState.DpadUp == true || t_cont->m_currentState.LeftThumbStick.y < -50)
 	{
 		this->move(sf::Vector2f{ 0, -10 });
 	}
 	if (t_cont->m_currentState.DpadDown == true || t_cont->m_currentState.LeftThumbStick.y > 50)
 	{
 		this->move(sf::Vector2f{ 0, 10 });
-	}
-	if (t_cont->m_currentState.A == true)
+	}*/
+	if (t_cont->m_currentState.A == true && t_cont->m_previousState.A == false)
 	{
 		if (m_layer == Layers::FrontLayer)
 		{
@@ -79,7 +79,7 @@ void Player::checkInput(Xbox360Controller *t_cont)
 			m_layer = Layers::BackLayer;
 		}
 	}
-	if (t_cont->m_currentState.B == true)
+	if (t_cont->m_currentState.B == true && t_cont->m_previousState.B == false)
 	{
 		if (m_layer == Layers::MiddleLayer)
 		{
@@ -90,6 +90,7 @@ void Player::checkInput(Xbox360Controller *t_cont)
 			m_layer = Layers::MiddleLayer;
 		}
 	}
+	t_cont->m_previousState = t_cont->m_currentState;
 }
 
 sf::Vector2f Player::getPosition() 
