@@ -3,12 +3,13 @@
 
 
 Player::Player() : 
-	m_position{0,0,0},
+	m_position{100,-100,0},
 	m_layer(Layers::BackLayer)
 	
 {
 	m_playerTexture.loadFromFile("goat.png");
 	m_playerSprite.setTexture(m_playerTexture);
+	m_playerSprite.setPosition(m_position);
 	m_playerSprite.setOrigin(m_playerTexture.getSize().x/2, m_playerTexture.getSize().y/2);
 }
 

@@ -6,6 +6,4 @@ enum class GameMode
 	Splash,
 	Menu,
 	Gameplay
-
-
 };
