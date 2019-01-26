@@ -18,13 +18,19 @@ public:
 	Layers getCurrentLayer();
 	void checkInput(Xbox360Controller *t_cont);
 	sf::Vector2f getPosition();
+	void setPosition(sf::Vector2f pos);
+	bool * getLandedBool();
+	bool * getJumpBool();
 
 private:
 	sf::Texture m_playerTexture;
 	sf::Sprite m_playerSprite;
 	sf::IntRect m_currentAnimationImage;
-	MyVector3 m_position;
 	Layers m_layer;
-
+	sf::Vector2f m_gravity;
+	sf::Vector2f m_velocity;
+	sf::Vector2f m_position;
+	bool m_landed{ true };
+	bool m_jump{ false };
 };
 

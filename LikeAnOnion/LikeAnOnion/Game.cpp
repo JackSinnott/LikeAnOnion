@@ -1,14 +1,16 @@
 #include "Game.h"
 
 
-GameMode Game::m_gameMode{ GameMode::Licence };
+GameMode Game::m_gameMode{ GameMode::Gameplay };
 
 // Contructor
 
 Game::Game() :
 
 	m_renderWin{ sf::VideoMode{ 1200, 800, 1 }, "Like An Onion" },
-	m_forest(5)
+	m_forest(5),
+	m_menuScreen(m_gameControllerPad)
+	
 	
 {
 	// Textures
@@ -34,7 +36,6 @@ Game::Game() :
 Game::~Game()
 {
 }
-
 
 // Loop designed to work at equal speed on all PCs
 // If a PC is slower, it will update the same amount of times
@@ -96,29 +97,59 @@ void Game::update(sf::Time t_deltaTime)
 	switch(m_gameMode)					// Switch to control the screens
 	{
 	case GameMode::Licence:
-		m_player.update(t_deltaTime, &m_gameControllerPad);
-		m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
 		break;
 	case GameMode::Splash:
 		break;
-	case GameMode::Menu:
+		if (m_menuScreen.update()) {
+			if (m_menuScreen.getSelection() == 1) {
+				m_gameMode = GameMode::Gameplay;
+			}
+			else if (m_menuScreen.getSelection() == 2) {
+				m_gameMode = GameMode::About;
+				m_aboutScreen.init();
+			}
+			else if (m_menuScreen.getSelection() == 3) {
+				m_renderWin.close();
+			}
+		}
 		break;
 	case GameMode::Gameplay:
+		m_player.update(t_deltaTime, &m_gameControllerPad);
+		m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
+
+		break;
+	case GameMode::About:
+		if (m_aboutScreen.update(t_deltaTime, &m_gameControllerPad)) {
+			m_gameMode = GameMode::Menu;
+			m_menuScreen.init();
+		}
 		break;
 	default:
 		break;
 	}
+
+	
+
 	//m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
 	for (int i = 0; i < 10; i++)
 	{
-		if (collision::isCollided(m_grounds[i], *m_player.getBody()))
-		{
-			m_player.getBody()->setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
-				m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
-			+ static_cast<int>(m_player.getCurrentLayer()) * 20 });
-		}
+			if (collision::isCollided(m_grounds[i], *m_player.getBody()))
+			{
+				/*if (m_player.getJumpBool() == false)
+				{*/
+					*m_player.getLandedBool() = true;
+					m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
+						m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
+						+ static_cast<int>(m_player.getCurrentLayer()) * 20 });
+				//}
+				break;
+			}
+		
 	}
-
+	/*if (m_player.getBody()->getPosition().y < -50)
+	{
+		*m_player.getJumpBool() = false;
+	}*/
 }
 
 // Renders
@@ -132,26 +163,33 @@ void Game::render()
 	case GameMode::Splash:
 		break;
 	case GameMode::Menu:
+		m_menuScreen.render(m_renderWin);
 		break;
 	case GameMode::Gameplay:
+		break;
+	case GameMode::About:
+		m_aboutScreen.render(m_renderWin);
 		break;
 	default:
 		break;
 	}
-	
+	m_renderWin.setView(m_gameCamera);
+
+
+
 	for (int i = 0; i < 6; i++)
 	{
 		m_renderWin.draw(m_sky);
 		m_sky.setPosition(m_sky.getPosition().x + m_sky.getGlobalBounds().width, m_sky.getPosition().y);
 	}
-	m_sky.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_sky.getGlobalBounds().height / 2) + 1);
+	m_sky.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_sky.getGlobalBounds().height / 2) + 1); // Reset
 
 	for (int i = 0; i < 10; i++)
 	{
 		m_renderWin.draw(m_grounds[i]);
 	}
 	
-	m_renderWin.setView(m_gameCamera);
+	
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));

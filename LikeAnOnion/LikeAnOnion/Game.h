@@ -13,7 +13,8 @@
 #include "collision.h"
 
 #include "Scenery.h"
-
+#include "MainMenu.h"
+#include "AboutScreen.h"
 
 class Game
 {
@@ -32,6 +33,10 @@ protected:
 	void processInput();
 	void render();
 
+	MainMenu m_menuScreen;
+	AboutScreen m_aboutScreen;
+
+
 	sf::RenderWindow m_renderWin;
 	Xbox360Controller m_gameControllerPad;
 	Player m_player;
@@ -43,6 +48,6 @@ protected:
 	sf::Sprite m_grounds[10];
 	sf::Texture m_skyTexture;
 	sf::Sprite m_sky;
-
+	
 };
 

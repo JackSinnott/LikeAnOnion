@@ -3,8 +3,10 @@
 
 
 Player::Player() : 
-	m_position{100,-100,0},
-	m_layer(Layers::BackLayer)
+	m_position{100,-100},
+	m_layer(Layers::BackLayer),
+	m_velocity(0, 0),
+	m_gravity(0.0f, 59.8f)
 	
 {
 	m_playerTexture.loadFromFile("goat.png");
@@ -21,6 +23,12 @@ Player::~Player()
 void Player::update(sf::Time dt, Xbox360Controller *t_cont)
 {
 	checkInput(t_cont);
+	if (m_landed == false)
+	{
+		m_velocity = m_velocity + (m_gravity*20.0f) * dt.asSeconds();				// Applying gravity to the ball if it has not landed
+		m_position = m_position + m_velocity * dt.asSeconds() + 0.5f*(m_gravity*20.0f)*(dt.asSeconds()*dt.asSeconds());		// Finding the new position each update
+	}
+	m_playerSprite.setPosition(m_position);
 }
 
 void Player::render(sf::RenderWindow & t_win, Layers t_currentLayer)
@@ -33,7 +41,7 @@ void Player::render(sf::RenderWindow & t_win, Layers t_currentLayer)
 
 void Player::move(MyVector3 t_movement)
 {
-	m_playerSprite.setPosition(m_playerSprite.getPosition() + sf::Vector2f{t_movement});
+	m_position = m_position + sf::Vector2f{t_movement};
 }
 
 void Player::jump()
@@ -60,15 +68,13 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	{
 		this->move(sf::Vector2f{ -10, 0 });
 	}
-	/*if (t_cont->m_currentState.DpadUp == true || t_cont->m_currentState.LeftThumbStick.y < -50)
+    if (t_cont->m_currentState.A == true && t_cont->m_previousState.A != true && m_landed == true)
 	{
-		this->move(sf::Vector2f{ 0, -10 });
+		m_velocity = m_velocity + sf::Vector2f(0, -700);
+		m_landed = false;
+		m_jump = true;
 	}
-	if (t_cont->m_currentState.DpadDown == true || t_cont->m_currentState.LeftThumbStick.y > 50)
-	{
-		this->move(sf::Vector2f{ 0, 10 });
-	}*/
-	if (t_cont->m_currentState.A == true && t_cont->m_previousState.A == false)
+	if (t_cont->m_currentState.RTrigger > 50 && t_cont->m_previousState.RTrigger < 50)
 	{
 		if (m_layer == Layers::FrontLayer)
 		{
@@ -79,7 +85,7 @@ void Player::checkInput(Xbox360Controller *t_cont)
 			m_layer = Layers::BackLayer;
 		}
 	}
-	if (t_cont->m_currentState.B == true && t_cont->m_previousState.B == false)
+	if (t_cont->m_currentState.LTrigger < -50 && t_cont->m_previousState.LTrigger > -50)
 	{
 		if (m_layer == Layers::MiddleLayer)
 		{
@@ -96,4 +102,19 @@ void Player::checkInput(Xbox360Controller *t_cont)
 sf::Vector2f Player::getPosition() 
 {
 	return m_playerSprite.getPosition();
+}
+
+void Player::setPosition(sf::Vector2f pos)
+{
+	m_position = pos;
+}
+
+bool * Player::getLandedBool()
+{
+	return &m_landed;
+}
+
+bool * Player::getJumpBool()
+{
+	return &m_jump;
 }
