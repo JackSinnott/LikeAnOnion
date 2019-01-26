@@ -8,9 +8,10 @@ GameMode Game::m_gameMode{ GameMode::Licence };
 
 // Contructor
 Game::Game() :
-	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Like An Onion" }
-{
 
+	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Like An Onion" },
+	m_forest(5)
+{
 }
 
 /// Destructor
@@ -111,6 +112,12 @@ void Game::render()
 	default:
 		break;
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_forest.render(m_renderWin, static_cast<Layers>(i));
+	}
+
 	m_renderWin.display();
 }
 
