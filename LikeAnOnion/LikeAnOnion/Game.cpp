@@ -3,21 +3,31 @@
 
 GameMode Game::m_gameMode{ GameMode::Licence };
 
-
-
-
 // Contructor
+
 Game::Game() :
 
 	m_renderWin{ sf::VideoMode{ 1600, 1600, 1 }, "Like An Onion" },
 	m_forest(5)
+	
 {
+	// Textures
+	m_floorTexture.loadFromFile("floor.jpg");
+	m_floor.setTexture(m_floorTexture);
+	m_floor.setOrigin(m_floor.getGlobalBounds().width/ 2, m_floor.getGlobalBounds().height / 2);
+
+	m_standngFloorTexture.loadFromFile("doubleSky.jpg");
+	m_standngFloor.setTexture(m_standngFloorTexture);
+	m_standngFloor.setOrigin(m_standngFloor.getGlobalBounds().width / 2, m_standngFloor.getGlobalBounds().height / 2);
+	m_standngFloor.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_standngFloor.getGlobalBounds().height / 2) + 1);
+	m_gameCamera.setSize(1600, 1600);
 }
 
 /// Destructor
 Game::~Game()
 {
 }
+
 
 // Loop designed to work at equal speed on all PCs
 // If a PC is slower, it will update the same amount of times
@@ -80,7 +90,7 @@ void Game::update(sf::Time t_deltaTime)
 	{
 	case GameMode::Licence:
 		m_player.update(t_deltaTime, &m_gameControllerPad);
-		m_gameCamera.setCenter(m_player.getPosition());	
+		m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
 		break;
 	case GameMode::Splash:
 		break;
@@ -91,8 +101,13 @@ void Game::update(sf::Time t_deltaTime)
 	default:
 		break;
 	}
-	m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
-	
+	//m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
+	if (collision::isCollided(m_floor, *m_player.getBody()))
+	{
+		m_player.getBody()->setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
+			m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)});
+	//	std::cout << "hit" << std::endl;
+	}
 
 }
 
@@ -113,8 +128,9 @@ void Game::render()
 	default:
 		break;
 	}
-	
-	//m_renderWin.setView(m_gameCamera);
+	m_renderWin.draw(m_floor);
+	m_renderWin.draw(m_standngFloor);
+	m_renderWin.setView(m_gameCamera);
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));
