@@ -140,7 +140,7 @@ void Game::update(sf::Time t_deltaTime)
 					*m_player.getLandedBool() = true;
 					m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
 						m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
-						+ static_cast<int>(m_player.getCurrentLayer()) * 20 });
+						+ static_cast<int>(m_player.getCurrentLayer()) * 20 + 10 });
 				//}
 				break;
 			}

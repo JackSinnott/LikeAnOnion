@@ -5,6 +5,7 @@ Player::Player() :
 	m_layer(Layers::BackLayer),
 	m_velocity(0, 0),
 	m_gravity(0.0f, 59.8f)
+
 {
 	m_playerTexture.loadFromFile("ASSETS/Player.png");
 	m_playerSprite.setTexture(m_playerTexture);
