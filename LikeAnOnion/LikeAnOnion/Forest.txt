@@ -1,3 +1,4 @@
+Blueprint 100 -90 1,
 Rock 250 -90 2,
 Tree 400 -150 2,
 Rock 400 -110 1,

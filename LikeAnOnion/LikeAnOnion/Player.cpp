@@ -137,7 +137,7 @@ void Player::checkInput(Xbox360Controller *t_cont, bool t_collide)
 	{
 
 		this->move(sf::Vector2f{ -10, 0 });
-		walkRight = true;
+		walkLeft= true;
 
 	}
 

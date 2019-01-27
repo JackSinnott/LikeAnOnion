@@ -8,6 +8,7 @@
 #include "SFML/Graphics.hpp"
 #include <fstream>
 #include <string>
+#include "HouseBlueprint.h"
 
 class Scenery
 {
@@ -23,6 +24,7 @@ private:
 
 	std::vector<Tree> m_trees;
 	std::vector<Rock> m_rocks;
+	std::vector<HouseBlueprint> m_blueprints;
 
 	sf::Texture m_sceneryObjects;
 

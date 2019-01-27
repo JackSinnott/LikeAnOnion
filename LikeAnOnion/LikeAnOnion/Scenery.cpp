@@ -32,6 +32,13 @@ Scenery::Scenery(int t_numOfTrees)
 			rock.initilaize(coord, static_cast<Layers>(layer));
 			m_rocks.push_back(rock);
 		}
+		else if(object == "Blueprint")
+		{
+			HouseBlueprint bluprint(m_sceneryObjects);
+			file >> coord.x >> coord.y >> layer;
+			bluprint.initilaize(coord, static_cast<Layers>(layer));
+			m_blueprints.push_back(bluprint);
+		}
 	}
 
 }
@@ -62,6 +69,14 @@ void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
 			rock.render(t_window);
 		}
 	}
+
+	for (HouseBlueprint & blueprint : m_blueprints)
+	{
+		if (blueprint.getLayer() == t_currentLayer)
+		{
+			blueprint.render(t_window);
+		}
+	}
 }
 
 bool Scenery::checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t_type)
@@ -75,7 +90,7 @@ bool Scenery::checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t
 		{
 			if (t_playerLayer == tree.getLayer())
 			{
-				if (collision::isCollided(*t_player, *tree.getBody()))
+				if (collision::isCollided(*t_player, *tree.getSpriteTrunk()))
 				{
 					collide = true;
 					break;
