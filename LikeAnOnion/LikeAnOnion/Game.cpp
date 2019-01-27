@@ -9,14 +9,15 @@ Game::Game() :
 
 	m_renderWin{ sf::VideoMode{ 1200, 800, 1 }, "Like An Onion" },
 	m_forest(5),
-	m_menuScreen(m_gameControllerPad)
-	
-	
+	m_menuScreen(m_gameControllerPad),
+	m_floorHeight(-160)
+
+
 {
 	// Textures
 	m_floorTexture.loadFromFile("floor.png");
 	m_floor.setTexture(m_floorTexture);
-	m_floor.setOrigin(m_floor.getGlobalBounds().width/ 2, m_floor.getGlobalBounds().height / 2);
+	m_floor.setOrigin(m_floor.getGlobalBounds().width / 2, m_floor.getGlobalBounds().height / 2);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -94,7 +95,7 @@ void Game::update(sf::Time t_deltaTime)
 {
 	m_gameControllerPad.update();
 
-	switch(m_gameMode)					// Switch to control the screens
+	switch (m_gameMode)					// Switch to control the screens
 	{
 	case GameMode::Licence:
 		break;
@@ -128,29 +129,35 @@ void Game::update(sf::Time t_deltaTime)
 		break;
 	}
 
-	
-
-	//m_forest.update(t_deltaTime, m_player.getBody(), m_player.getCurrentLayer());
-	for (int i = 0; i < 10; i++)
+	Layers m_currentLayer = m_player.getCurrentLayer();
+	if (m_currentLayer == Layers::BackLayer)
 	{
-			if (collision::isCollided(m_grounds[i], *m_player.getBody()))
-			{
-				/*if (m_player.getJumpBool() == false)
-				{*/
-					*m_player.getLandedBool() = true;
-					m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
-						m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
-						+ static_cast<int>(m_player.getCurrentLayer()) * 20 });
-				//}
-				break;
-			}
-		
+		m_floorHeight = -150;
 	}
-	/*if (m_player.getBody()->getPosition().y < -50)
+	else if (m_currentLayer == Layers::MiddleLayer)
 	{
-		*m_player.getJumpBool() = false;
-	}*/
+		m_floorHeight = -130;
+	}
+	else if (m_currentLayer == Layers::FrontLayer)
+	{
+		m_floorHeight = -110;
+	}
+	if (m_player.getPosition().y > m_floorHeight)
+	{
+		*m_player.getLandedBool() = true;
+	}
+
+	if (*m_player.getLandedBool() == true)
+	{
+		m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x, m_floorHeight });
+
+		/*m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
+			m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
+			+ static_cast<int>(m_player.getCurrentLayer()) * 20 });*/
+	}
 }
+
+
 
 // Renders
 void Game::render()
@@ -188,14 +195,14 @@ void Game::render()
 	{
 		m_renderWin.draw(m_grounds[i]);
 	}
-	
-	
+
+
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));
 		m_player.render(m_renderWin, static_cast<Layers>(i));  // Player after items becuase it needs to be on top it's current layer 
 	}
-	
+
 	m_renderWin.display();
 }
 

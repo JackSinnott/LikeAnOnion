@@ -23,8 +23,12 @@ void Player::update(sf::Time dt, Xbox360Controller *t_cont)
 	checkInput(t_cont);
 	if (m_landed == false)
 	{
-		m_velocity = m_velocity + (m_gravity*20.0f) * dt.asSeconds();				// Applying gravity to the ball if it has not landed
+		m_velocity = m_velocity + (m_gravity*20.0f) * dt.asSeconds();				// Applying gravity to the player if it has not landed
 		m_position = m_position + m_velocity * dt.asSeconds() + 0.5f*(m_gravity*20.0f)*(dt.asSeconds()*dt.asSeconds());		// Finding the new position each update
+	}
+	else
+	{
+		m_velocity = { 0,0 };
 	}
 	m_playerSprite.setPosition(m_position);
 

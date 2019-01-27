@@ -48,6 +48,6 @@ protected:
 	sf::Sprite m_grounds[10];
 	sf::Texture m_skyTexture;
 	sf::Sprite m_sky;
-	
+	float m_floorHeight;
 };
 
