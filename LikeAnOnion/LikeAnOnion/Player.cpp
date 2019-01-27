@@ -1,20 +1,18 @@
 #include "Player.h"
 
-
-
 Player::Player() : 
 	m_position{100,-100},
 	m_layer(Layers::BackLayer),
 	m_velocity(0, 0),
 	m_gravity(0.0f, 59.8f)
-	
 {
-	m_playerTexture.loadFromFile("goat.png");
+	m_playerTexture.loadFromFile("ASSETS/Player.png");
 	m_playerSprite.setTexture(m_playerTexture);
+	m_playerFrame = sf::IntRect(0, 3 * 65, 60, 65);
+	m_playerSprite.setTextureRect(m_playerFrame);
 	m_playerSprite.setPosition(m_position);
-	m_playerSprite.setOrigin(m_playerTexture.getSize().x/2, m_playerTexture.getSize().y/2);
+	m_playerSprite.setOrigin(m_playerFrame.width / 2, m_playerFrame.height / 2);
 }
-
 
 Player::~Player()
 {
@@ -29,6 +27,8 @@ void Player::update(sf::Time dt, Xbox360Controller *t_cont)
 		m_position = m_position + m_velocity * dt.asSeconds() + 0.5f*(m_gravity*20.0f)*(dt.asSeconds()*dt.asSeconds());		// Finding the new position each update
 	}
 	m_playerSprite.setPosition(m_position);
+
+	updatePlayerFrame();
 }
 
 void Player::render(sf::RenderWindow & t_win, Layers t_currentLayer)
@@ -48,6 +48,55 @@ void Player::jump()
 {
 }
 
+void Player::updatePlayerFrame()
+{
+	//If we have moved right we animate walking right.
+	if (walkRight == true)
+	{
+		//If the animation timer reached 0.
+		if (animationTimer == 0)
+		{
+			//If we have reached the end of the sprite sheet we go back to the start.
+			if (m_playerFrame.left == 540)
+			{
+				m_playerFrame.left = 0;
+			}
+			//Jump to the next frame in line.
+			m_playerFrame.left = m_playerFrame.left + m_playerFrame.width;
+
+			//Sets the y frame.
+			m_playerFrame.top = 455;
+
+			//Reset the animation timer back to max.
+			animationTimer = 4;
+		}
+		animationTimer--;
+	}
+	else if (walkLeft == true)
+	{
+		if (animationTimer == 0)
+		{
+			if (m_playerFrame.left == 0)
+			{
+				m_playerFrame.left = 540;
+			}
+			m_playerFrame.left = m_playerFrame.left - m_playerFrame.width;
+			m_playerFrame.top = 325;
+			animationTimer = 4;
+		}
+		animationTimer--;
+	}
+	else
+	{
+		//We are not not moving so we do the idle animation.
+		m_playerFrame = sf::IntRect(0, 3 * 65, 60, 65);
+	}
+
+	m_playerSprite.setTextureRect(m_playerFrame);
+	walkLeft = false;
+	walkRight = false;
+}
+
 sf::Sprite * Player::getBody()
 {
 	return &m_playerSprite;
@@ -63,10 +112,12 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	if (t_cont->m_currentState.DpadRight == true || t_cont->m_currentState.LeftThumbStick.x > 50)
 	{
 		this->move(sf::Vector2f{ 10, 0 });
+		walkRight = true;
 	}
 	if (t_cont->m_currentState.DpadLeft == true || t_cont->m_currentState.LeftThumbStick.x < -50)
 	{
 		this->move(sf::Vector2f{ -10, 0 });
+		walkLeft = true;
 	}
     if (t_cont->m_currentState.A == true && t_cont->m_previousState.A != true && m_landed == true)
 	{
@@ -104,6 +155,7 @@ sf::Vector2f Player::getPosition()
 	return m_playerSprite.getPosition();
 }
 
+
 void Player::setPosition(sf::Vector2f pos)
 {
 	m_position = pos;
@@ -117,4 +169,9 @@ bool * Player::getLandedBool()
 bool * Player::getJumpBool()
 {
 	return &m_jump;
+}
+
+int Player::getHouseItems()
+{
+	return houseItems;
 }

@@ -14,6 +14,7 @@ public:
 	void render(sf::RenderWindow & t_win, Layers t_currentLayer);
 	void move(MyVector3 t_movement);
 	void jump();
+	void updatePlayerFrame();
 	sf::Sprite* getBody();
 	Layers getCurrentLayer();
 	void checkInput(Xbox360Controller *t_cont);
@@ -22,15 +23,27 @@ public:
 	bool * getLandedBool();
 	bool * getJumpBool();
 
+	int getHouseItems();
+
 private:
 	sf::Texture m_playerTexture;
 	sf::Sprite m_playerSprite;
-	sf::IntRect m_currentAnimationImage;
+
 	Layers m_layer;
 	sf::Vector2f m_gravity;
 	sf::Vector2f m_velocity;
 	sf::Vector2f m_position;
 	bool m_landed{ true };
 	bool m_jump{ false };
+
+	sf::IntRect m_playerFrame;
+
+	bool walkLeft{ false };
+	bool walkRight{ false };
+
+	int animationTimer{ 0 };
+
+	int houseItems{ 0 };
+
 };
 
