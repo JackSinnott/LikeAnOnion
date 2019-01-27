@@ -26,11 +26,7 @@ void Player::update(sf::Time dt, Xbox360Controller *t_cont, bool t_collide)
 	if (m_landed == false)
 	{
 		m_velocity = m_velocity + (m_gravity*20.0f) * dt.asSeconds();				// Applying gravity to the player if it has not landed
-		if (t_collide == true)
-		{
-			m_velocity.x = 0;
-		}
-		m_previousPos = m_position;
+	
 		m_position = m_position + m_velocity * dt.asSeconds() + 0.5f*(m_gravity*20.0f)*(dt.asSeconds()*dt.asSeconds());		// Finding the new position each update
 		if (t_collide == true)
 		{
@@ -43,7 +39,6 @@ void Player::update(sf::Time dt, Xbox360Controller *t_cont, bool t_collide)
 	}
 
 	m_playerSprite.setPosition(m_position);
-
 
 	updatePlayerFrame();
 }
@@ -195,10 +190,10 @@ bool * Player::getJumpBool()
 
 void Player::pushBackToPrevious()
 {
-	m_playerSprite.setPosition(m_previousPos.x, m_position.y);
+	m_playerSprite.setPosition(m_previousPos);
 }
 
 int Player::getHouseItems()
 {
-	return houseItems;
+	return blueprints;
 }

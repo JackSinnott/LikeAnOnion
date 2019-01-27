@@ -24,6 +24,11 @@ void HouseBlueprint::render(sf::RenderWindow & t_window)
 	t_window.draw(m_sprite);
 }
 
+void HouseBlueprint::setPosition(sf::Vector2f pos)
+{
+	m_sprite.setPosition(pos);
+}
+
 sf::Sprite * HouseBlueprint::getBody()
 {
 	return &m_sprite;

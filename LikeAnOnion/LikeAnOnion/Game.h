@@ -52,5 +52,10 @@ protected:
 	bool m_stopPlayer{ false };
 	bool objectCollideTree{ false };
 	bool objectCollideRock{ false };
+	bool objectCollideBP{ false };
+
+	sf::Texture m_houseTexture;
+
+	sf::Sprite m_house;
 };
 

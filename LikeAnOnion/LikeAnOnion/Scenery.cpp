@@ -49,7 +49,15 @@ Scenery::~Scenery()
 
 void Scenery::update(sf::Time t_deltaTime)
 {
-	
+	int i = 0;
+	for (HouseBlueprint & blueprint : m_blueprints)
+	{
+		if (blueprint.inInventory == true)
+		{
+			blueprint.setPosition(sf::Vector2f(1100 - i * 80, 2000));
+			i++;
+		}
+	}
 }
 
 void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
@@ -95,6 +103,11 @@ bool Scenery::checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t
 					collide = true;
 					break;
 				}
+				else if (collision::isCollided(*t_player, *tree.getSpriteLeaves()))
+				{
+					collide = true;
+					break;
+				}
 				else
 				{
 					collide = false;
@@ -115,11 +128,30 @@ bool Scenery::checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t
 				}
 				else
 				{
-					collide = true;
+					collide = false;
 				}
 			}
 		}
+	}
 
+	else if (t_type == 3)
+	{
+		for (HouseBlueprint & blueprint : m_blueprints)
+		{
+			if (t_playerLayer == blueprint.getLayer())
+			{
+				if (collision::isCollided(*t_player, *blueprint.getBody()))
+				{
+					collide = true;
+					blueprint.inInventory = true;
+					break;
+				}
+				else
+				{
+					collide = false;
+				}
+			}
+		}
 	}
 
 	return collide;

@@ -25,6 +25,7 @@ public:
 	void pushBackToPrevious();
 
 	int getHouseItems();
+	int blueprints{ 0 };
 
 private:
 	sf::Texture m_playerTexture;
@@ -44,8 +45,6 @@ private:
 	bool walkRight{ false };
 
 	int animationTimer{ 0 };
-
-	int houseItems{ 0 };
 
 };
 

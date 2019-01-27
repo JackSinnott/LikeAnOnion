@@ -11,8 +11,6 @@ Game::Game() :
 	m_forest(5),
 	m_menuScreen(m_gameControllerPad),
 	m_floorHeight(-160)
-
-
 {
 	// Textures
 	m_floorTexture.loadFromFile("floor.png");
@@ -25,6 +23,11 @@ Game::Game() :
 		m_grounds[i].setOrigin(m_floor.getGlobalBounds().width / 2, m_floor.getGlobalBounds().height / 2);
 		m_grounds[i].setPosition(0 + i * 3070, 0);
 	}
+
+	m_houseTexture.loadFromFile("ASSETS/house.png");
+	m_house.setTexture(m_houseTexture);
+	m_house.setScale(0.5, 0.5);
+	m_house.setPosition(-500, -500);
 
 	m_skyTexture.loadFromFile("dubSky.png");
 	m_sky.setTexture(m_skyTexture);
@@ -128,17 +131,25 @@ void Game::update(sf::Time t_deltaTime)
 	}
 
 	m_player.update(t_deltaTime, &m_gameControllerPad, objectCollideTree);
-	m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
 
 	// tree collide
-	objectCollideTree = m_forest.checkCollisions(m_player.getBody(),m_player.getCurrentLayer(), 1 );
+	objectCollideTree = m_forest.checkCollisions(m_player.getBody(),m_player.getCurrentLayer(), 1);
 	objectCollideRock = m_forest.checkCollisions(m_player.getBody(), m_player.getCurrentLayer(), 2);
+	objectCollideBP = m_forest.checkCollisions(m_player.getBody(), m_player.getCurrentLayer(), 3);
 
 	if (objectCollideTree == true)
 	{
 		m_player.pushBackToPrevious();
 	}
-	
+	else if (objectCollideRock == true)
+	{
+		m_player.pushBackToPrevious();
+	}
+	else if (objectCollideBP == true)
+	{
+		m_player.blueprints++;
+	}
+	m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
 	Layers m_currentLayer = m_player.getCurrentLayer();
 	if (m_currentLayer == Layers::BackLayer)
 	{
@@ -165,6 +176,7 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x, m_player.getBody()->getPosition().y });
 	}
+	m_forest.update(t_deltaTime);
 }
 
 
@@ -199,6 +211,10 @@ void Game::render()
 	}
 	m_sky.setPosition(m_floor.getPosition().x, m_floor.getPosition().y - (m_floor.getGlobalBounds().height / 2 + m_sky.getGlobalBounds().height / 2) + 1); // Reset
 
+	if (m_player.blueprints > 0)
+	{
+		m_renderWin.draw(m_house);
+	}
 	for (int i = 0; i < 10; i++)
 	{
 		m_renderWin.draw(m_grounds[i]);
