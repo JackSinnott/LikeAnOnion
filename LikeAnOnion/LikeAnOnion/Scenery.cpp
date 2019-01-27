@@ -32,6 +32,13 @@ Scenery::Scenery(int t_numOfTrees)
 			rock.initilaize(coord, static_cast<Layers>(layer));
 			m_rocks.push_back(rock);
 		}
+		else if(object == "Blueprint")
+		{
+			HouseBlueprint bluprint(m_sceneryObjects);
+			file >> coord.x >> coord.y >> layer;
+			bluprint.initilaize(coord, static_cast<Layers>(layer));
+			m_blueprints.push_back(bluprint);
+		}
 	}
 
 }
@@ -47,7 +54,7 @@ void Scenery::update(sf::Time t_deltaTime, sf::Sprite * t_player, Layers t_playe
 	{
 		if (t_playerLayer == tree.getLayer())
 		{
-			if (collision::isCollided(*t_player, *tree.getBody()))
+			if (collision::isCollided(*t_player, *tree.getSpriteLeaves()))
 			{
 				std::cout << "Collide" << std::endl;
 			}
@@ -74,6 +81,14 @@ void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
 		if (rock.getLayer() == t_currentLayer)
 		{
 			rock.render(t_window);
+		}
+	}
+
+	for (HouseBlueprint & blueprint : m_blueprints)
+	{
+		if (blueprint.getLayer() == t_currentLayer)
+		{
+			blueprint.render(t_window);
 		}
 	}
 }
