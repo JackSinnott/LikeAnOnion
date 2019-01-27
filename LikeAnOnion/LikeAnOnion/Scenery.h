@@ -15,8 +15,9 @@ public:
 	Scenery(int t_numOfTrees);
 	~Scenery();
 
-	void update(sf::Time t_deltaTime, sf::Sprite * t_player, Layers t_playerLayer);
+	void update(sf::Time t_deltaTime);
 	void render(sf::RenderWindow &t_window, Layers t_currentLayer);
+	bool checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t_type);
 
 private:
 

@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player() : 
-	m_position{100,-100},
+Player::Player() :
+	m_position{ 100,-100 },
 	m_layer(Layers::BackLayer),
 	m_velocity(0, 0),
 	m_gravity(0.0f, 59.8f)
@@ -19,19 +19,31 @@ Player::~Player()
 {
 }
 
-void Player::update(sf::Time dt, Xbox360Controller *t_cont)
+void Player::update(sf::Time dt, Xbox360Controller *t_cont, bool t_collide)
 {
-	checkInput(t_cont);
+	checkInput(t_cont, t_collide);
+
 	if (m_landed == false)
 	{
 		m_velocity = m_velocity + (m_gravity*20.0f) * dt.asSeconds();				// Applying gravity to the player if it has not landed
+		if (t_collide == true)
+		{
+			m_velocity.x = 0;
+		}
+		m_previousPos = m_position;
 		m_position = m_position + m_velocity * dt.asSeconds() + 0.5f*(m_gravity*20.0f)*(dt.asSeconds()*dt.asSeconds());		// Finding the new position each update
+		if (t_collide == true)
+		{
+			m_position.x = m_previousPos.x;
+		}
 	}
 	else
 	{
 		m_velocity = { 0,0 };
 	}
+
 	m_playerSprite.setPosition(m_position);
+
 
 	updatePlayerFrame();
 }
@@ -46,7 +58,8 @@ void Player::render(sf::RenderWindow & t_win, Layers t_currentLayer)
 
 void Player::move(MyVector3 t_movement)
 {
-	m_position = m_position + sf::Vector2f{t_movement};
+	m_previousPos = m_position;
+	m_position = m_position + sf::Vector2f{ t_movement };
 }
 
 void Player::jump()
@@ -112,8 +125,9 @@ Layers Player::getCurrentLayer()
 	return m_layer;
 }
 
-void Player::checkInput(Xbox360Controller *t_cont) 
+void Player::checkInput(Xbox360Controller *t_cont, bool t_collide)
 {
+
 	if (t_cont->m_currentState.DpadRight == true || t_cont->m_currentState.LeftThumbStick.x > 50)
 	{
 		this->move(sf::Vector2f{ 10, 0 });
@@ -121,12 +135,15 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	}
 	if (t_cont->m_currentState.DpadLeft == true || t_cont->m_currentState.LeftThumbStick.x < -50)
 	{
+
 		this->move(sf::Vector2f{ -10, 0 });
-		walkLeft = true;
+		walkRight = true;
+
 	}
-    if (t_cont->m_currentState.A == true && t_cont->m_previousState.A != true && m_landed == true)
+
+	if (t_cont->m_currentState.A == true && t_cont->m_previousState.A != true && m_landed == true)
 	{
-		m_velocity = m_velocity + sf::Vector2f(0, -700);
+		m_velocity = m_velocity + sf::Vector2f(0, -500);
 		m_landed = false;
 		m_jump = true;
 	}
@@ -155,7 +172,7 @@ void Player::checkInput(Xbox360Controller *t_cont)
 	t_cont->m_previousState = t_cont->m_currentState;
 }
 
-sf::Vector2f Player::getPosition() 
+sf::Vector2f Player::getPosition()
 {
 	return m_playerSprite.getPosition();
 }
@@ -174,6 +191,11 @@ bool * Player::getLandedBool()
 bool * Player::getJumpBool()
 {
 	return &m_jump;
+}
+
+void Player::pushBackToPrevious()
+{
+	m_playerSprite.setPosition(m_previousPos.x, m_position.y);
 }
 
 int Player::getHouseItems()

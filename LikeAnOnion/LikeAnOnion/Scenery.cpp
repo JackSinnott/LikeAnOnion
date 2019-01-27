@@ -40,23 +40,9 @@ Scenery::~Scenery()
 {
 }
 
-void Scenery::update(sf::Time t_deltaTime, sf::Sprite * t_player, Layers t_playerLayer)
+void Scenery::update(sf::Time t_deltaTime)
 {
-	// Player Tree collisions
-	for (Tree & tree : m_trees)
-	{
-		if (t_playerLayer == tree.getLayer())
-		{
-			if (collision::isCollided(*t_player, *tree.getBody()))
-			{
-				std::cout << "Collide" << std::endl;
-			}
-			else
-			{
-				std::cout << "Nah" << std::endl;
-			}
-		}
-	}
+	
 }
 
 void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
@@ -76,4 +62,50 @@ void Scenery::render(sf::RenderWindow &t_window, Layers t_currentLayer)
 			rock.render(t_window);
 		}
 	}
+}
+
+bool Scenery::checkCollisions(sf::Sprite * t_player, Layers t_playerLayer, int t_type)
+{
+	bool collide{ false };
+
+	// Player Tree collisions
+	if (t_type == 1)
+	{
+		for (Tree & tree : m_trees)
+		{
+			if (t_playerLayer == tree.getLayer())
+			{
+				if (collision::isCollided(*t_player, *tree.getBody()))
+				{
+					collide = true;
+					break;
+				}
+				else
+				{
+					collide = false;
+				}
+			}
+		}
+	}  // Player - Rock Collisions
+	else if (t_type == 2)
+	{
+		for (Rock & rock : m_rocks)
+		{
+			if (t_playerLayer == rock.getLayer())
+			{
+				if (collision::isCollided(*t_player, *rock.getBody()))
+				{
+					collide = true;
+					break;
+				}
+				else
+				{
+					collide = true;
+				}
+			}
+		}
+
+	}
+
+	return collide;
 }

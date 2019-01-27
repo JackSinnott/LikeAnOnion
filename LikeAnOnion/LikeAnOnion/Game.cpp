@@ -115,8 +115,6 @@ void Game::update(sf::Time t_deltaTime)
 		}
 		break;
 	case GameMode::Gameplay:
-		m_player.update(t_deltaTime, &m_gameControllerPad);
-		m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
 
 		break;
 	case GameMode::About:
@@ -129,18 +127,30 @@ void Game::update(sf::Time t_deltaTime)
 		break;
 	}
 
+	m_player.update(t_deltaTime, &m_gameControllerPad, objectCollideTree);
+	m_gameCamera.setCenter(sf::Vector2f{ m_player.getPosition().x, m_player.getPosition().y - 300 });
+
+	// tree collide
+	objectCollideTree = m_forest.checkCollisions(m_player.getBody(),m_player.getCurrentLayer(), 1 );
+	objectCollideRock = m_forest.checkCollisions(m_player.getBody(), m_player.getCurrentLayer(), 2);
+
+	if (objectCollideTree == true)
+	{
+		m_player.pushBackToPrevious();
+	}
+	
 	Layers m_currentLayer = m_player.getCurrentLayer();
 	if (m_currentLayer == Layers::BackLayer)
 	{
-		m_floorHeight = -150;
+		m_floorHeight = -140;
 	}
 	else if (m_currentLayer == Layers::MiddleLayer)
 	{
-		m_floorHeight = -130;
+		m_floorHeight = -120;
 	}
 	else if (m_currentLayer == Layers::FrontLayer)
 	{
-		m_floorHeight = -110;
+		m_floorHeight = -100;
 	}
 	if (m_player.getPosition().y > m_floorHeight)
 	{
@@ -150,10 +160,10 @@ void Game::update(sf::Time t_deltaTime)
 	if (*m_player.getLandedBool() == true)
 	{
 		m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x, m_floorHeight });
-
-		/*m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x,
-			m_floor.getPosition().y - (m_grounds[i].getGlobalBounds().height / 2 + m_player.getBody()->getGlobalBounds().height / 2)
-			+ static_cast<int>(m_player.getCurrentLayer()) * 20 });*/
+	}
+	else
+	{
+		m_player.setPosition(sf::Vector2f{ m_player.getBody()->getPosition().x, m_player.getBody()->getPosition().y });
 	}
 }
 
@@ -182,8 +192,6 @@ void Game::render()
 	}
 	m_renderWin.setView(m_gameCamera);
 
-
-
 	for (int i = 0; i < 6; i++)
 	{
 		m_renderWin.draw(m_sky);
@@ -195,8 +203,6 @@ void Game::render()
 	{
 		m_renderWin.draw(m_grounds[i]);
 	}
-
-
 	for (int i = 0; i < 3; i++)
 	{
 		m_forest.render(m_renderWin, static_cast<Layers>(i));

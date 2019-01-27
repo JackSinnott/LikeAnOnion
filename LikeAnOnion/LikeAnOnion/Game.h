@@ -49,5 +49,8 @@ protected:
 	sf::Texture m_skyTexture;
 	sf::Sprite m_sky;
 	float m_floorHeight;
+	bool m_stopPlayer{ false };
+	bool objectCollideTree{ false };
+	bool objectCollideRock{ false };
 };
 
